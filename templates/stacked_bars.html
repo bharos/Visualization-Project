@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<style>
+
+.axis .domain {
+  display: none;
+}
+
+</style>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <title>Accident data Analytics</title>
+
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+
+    <!-- Bootstrap core CSS     -->
+    <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!--  Light Bootstrap Table core CSS    -->
+    <link href="static/assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
+    <link href="static/assets/css/style.css" rel="stylesheet" />
+
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+    <link href="static/assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../static/plot.js"></script>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="static/assets/img/sidebar-4.jpg">
+      <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="#" class="simple-text">
+                    ACCIDENT DATA ANALYTICS
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li>
+                    <a href="/intrinsic_template">
+                        <i class="pe-7s-map-marker"></i>
+                        <p>Intrinsic Dimensionality</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/scree_template">
+                        <i class="pe-7s-science"></i>
+                        <p>Scree Plot</p>
+                    </a>
+                </li>
+                <li >
+                    <a href="#">
+                        <i class="pe-7s-graph"></i>
+                        <p>PCA Scatterplot</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/elbow_template">
+                        <i class="pe-7s-photo"></i>
+                        <p>K Means Elbow</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#">
+                        <i class="pe-7s-photo"></i>
+                        <p>Stacked Bars</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/geo_template">
+                        <i class="pe-7s-photo"></i>
+                        <p>UK Choropleth</p>
+                    </a>
+                </li>
+            </ul>
+      </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Stacked Bars</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-dashboard"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- <ul class="nav navbar-nav navbar-right">
+                        
+                    </ul -->
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="row">
+              <div class="col-md-2 col-md-offset-8">
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select option
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li onclick="change_bars('age')"><a href="#">Age of drivers</a></li>
+                  <li onclick="change_bars('sex')"><a href="#">Sex of drivers</a></li>
+                </ul>
+                </div>
+              </div>
+              </div>
+        <div class="row">
+           <svg width="1260" height="500"></svg>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+
+<script>
+
+var svg = d3.select("svg"),
+    margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom;
+
+var x = d3.scaleBand()
+    .rangeRound([0, width])
+    .paddingInner(0.2)
+    .align(0.1);
+
+var y = d3.scaleLinear()
+    .rangeRound([height, 0]);
+
+var z = d3.scaleOrdinal()
+    .range([ "#a05d56", "#d0743c", "#ff8c00"]);
+
+
+var file_name = "sex_of_drivers.csv";
+
+function change_bars(type)
+{
+
+  if(type=='age')
+      file_name = "age_of_drivers.csv";
+    else
+      file_name = "sex_of_drivers.csv";
+
+    plot_bars();
+}
+
+function plot_bars()
+{
+
+
+svg.selectAll("*").remove();
+
+
+var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("static/assets/"+file_name, function(d, i, columns) {
+  for (i = 1, t = 0; i < columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
+  d.total = t;
+  return d;
+}, function(error, data) {
+  if (error) throw error;
+
+  var keys = data.columns.slice(1);
+
+  data.sort(function(a, b) { return b.total - a.total; });
+  x.domain(data.map(function(d) { return d.State; }));
+  y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
+  z.domain(keys);
+
+  g.append("g")
+    .selectAll("g")
+    .data(d3.stack().keys(keys)(data))
+    .enter().append("g")
+      .attr("fill", function(d) { return z(d.key); })
+    .selectAll("rect")
+    .data(function(d) { return d; })
+    .enter().append("rect")
+      .attr("x", function(d) { return x(d.data.State); })
+      .attr("y", function(d) { return y(d[1]); })
+      .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+      .attr("width", x.bandwidth());
+
+  g.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  g.append("g")
+      .attr("class", "axis")
+      .call(d3.axisLeft(y).ticks(null, "s"))
+    .append("text")
+      .attr("x", 2)
+      .attr("y", y(y.ticks().pop()) + 0.5)
+      .attr("dy", "0.32em")
+      .attr("fill", "#000")
+      .attr("font-weight", "bold")
+      .attr("text-anchor", "start")
+      .text("Population");
+
+  var legend = g.append("g")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+      .attr("text-anchor", "end")
+    .selectAll("g")
+    .data(keys.slice().reverse())
+    .enter().append("g")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 19)
+      .attr("width", 19)
+      .attr("height", 19)
+      .attr("fill", z);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9.5)
+      .attr("dy", "0.32em")
+      .text(function(d) { return d; });
+});
+}
+
+
+plot_bars();
+</script>

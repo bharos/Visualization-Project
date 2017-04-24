@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.postcode_area {
+  fill: #AAA;
+}
+
+.mesh {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+  stroke-linejoin: round;
+}
+
+</style>
+<head>
+
+<meta charset="utf-8" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.ico">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+  <title>Lab2 - Visualization</title>
+
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+
+    <!-- Bootstrap core CSS     -->
+    <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!--  Light Bootstrap Table core CSS    -->
+    <link href="static/assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
+    <link href="static/assets/css/style.css" rel="stylesheet" />
+
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+    <link href="static/assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="../static/plot.js"></script>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+ <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="static/assets/img/sidebar-4.jpg">
+      <div class="sidebar-wrapper">
+            <div class="logo">
+                <a href="#" class="simple-text">
+                    ACCIDENT DATA ANALYTICS
+                </a>
+            </div>
+
+            <ul class="nav">
+                <li>
+                    <a href="/intrinsic_template">
+                        <i class="pe-7s-map-marker"></i>
+                        <p>Intrinsic Dimensionality</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/scree_template">
+                        <i class="pe-7s-science"></i>
+                        <p>Scree Plot</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        <i class="pe-7s-graph"></i>
+                        <p>PCA Scatterplot</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/elbow_template">
+                        <i class="pe-7s-photo"></i>
+                        <p>K Means Elbow</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/stacked_bars">
+                        <i class="pe-7s-photo"></i>
+                        <p>Stacked Bars</p>
+                    </a>
+                </li>
+                <li  class="active">
+                    <a href="/">
+                        <i class="pe-7s-photo"></i>
+                        <p>UK Choropleth</p>
+                    </a>
+                </li>
+            </ul>
+      </div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">UK Map Choropleth</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-dashboard"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- <ul class="nav navbar-nav navbar-right">
+                        
+                    </ul -->
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id = "geo"></div>
+                        </div>
+              <div class="col-md-6 col-md-offset-2">
+              <div class="row">
+              <span style="margin-left:200px">POSTAL CODE : <span id="postal">---</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Accident Details</span>
+                          <table class="table" id="dataTable">
+                          <tbody>
+                          <tr>
+                          <td style="text-align: center">Male</td>
+                          <td  id="male">-</td>
+                          </tr>
+                          <tr>
+                          <td style="text-align: center">Female</td>
+                          <td id="female">-</td>
+                          </tr>
+                          <tr>
+                          <td style="text-align: center">Age group 18-30</td>
+                          <td id="a1">-</td>
+                          </tr>
+                          <tr>
+                          <td style="text-align: center">Age group 31-40</td>
+                          <td id="a2">-</td>
+                          </tr>
+                          <tr>
+                          <td style="text-align: center">Age group 41-50</td>
+                          <td id="a3">-</td>
+                          </tr>
+                          </tbody>
+                          </table>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-6">
+                    <div id="donut1"></div>
+                    </div>
+                    <div class="col-md-6">
+                    <div id="donut2"></div>
+                    </div>
+                    </div>
+                    </div>
+                          
+                    </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+<script>
+
+var width = 960,
+    height = 800;
+
+var projection = d3.geo.albers()
+    .center([0, 55.4])
+    .rotate([4.4, 0])
+    .parallels([50, 60])
+    .scale(800 * 5)
+    .translate([width/5, height/3]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var svg = d3.select("#geo").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var areas=["AB", "AL", "B", "BA", "BB", "BD", "BH", "BL", "BN", "BR", "BS", "BT", "CA", "CB", "CF", "CH", "CM", "CO", "CR", "CT", "CV", "CW", "DA", "DD", "DE", "DG", "DH", "DL", "DN", "DT", "DY", "E", "EC", "EH", "EN", "EX", "FK", "FY", "G", "GL", "GU", "HA", "HD", "HG", "HP", "HR", "HS", "HU", "HX", "IG", "IP", "IV", "KA", "KT", "KW", "KY", "L", "LA", "LD", "LE", "LL", "LN", "LS", "LU", "M", "ME", "MK", "ML", "N", "NE", "NG", "NN", "NP", "NR", "NW", "OL", "OX", "PA", "PE", "PH", "PL", "PO", "PR", "RG", "RH", "RM", "S", "SA", "SE", "SG", "SK", "SL", "SM", "SN", "SO", "SP", "SR", "SS", "ST", "SW", "SY", "TA", "TD", "TF", "TN", "TQ", "TR", "TS", "TW", "UB", "W", "WA", "WC", "WD", "WF", "WN", "WR", "WS", "WV", "YO", "ZE"];
+
+var areadata={};
+
+_.each(areas, function(a) {
+  areadata[a]=a.charCodeAt(0);
+  console.log(a+" "+areadata[a]);
+});
+
+
+var color = d3.scale.quantize().range([
+                "rgb(198,219,239)",
+                "rgb(158,202,225)",
+                "rgb(107,174,214)",
+                "rgb(66,146,198)",
+                "rgb(33,113,181)",
+                "rgb(8,81,156)",
+                "rgb(8,48,107)"]);
+
+  color.domain(d3.extent(_.toArray(areadata)));   
+
+
+
+d3.json("static/assets/uk-postcode-area.json", function(error, uk) {
+  
+
+  var p =svg.selectAll(".postcode_area")
+      .data(topojson.feature(uk, uk.objects['uk-postcode-area']).features)
+    .enter().append("path")
+      .attr("class", "postcode_area")
+      .attr("d", path)
+      .style("fill", function(d) {
+                        //Get data value
+                        var value = areadata[d.id];
+
+                        if (value) {
+                                return color(value);
+                        } else {
+                                return "#AAA";
+                        }
+           })                        
+      p.append("svg:title")
+            .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
+            .attr("dy", ".35em")
+            .text(function (d) { return d.id; });
+
+        p.on('click',function(d,i)
+        {
+          console.log(d);
+          console.log("GG");  
+        }).
+        on('mouseover', function(d, i) {
+           d3.select(this)
+            .style('fill',function(d)
+            {
+              return "#000";
+            });
+
+            updateTable(d);
+        })
+        .on('mouseout', function(d, i) {
+            d3.select(this)
+            .style('fill',function(d)
+            {
+               var value = areadata[d.id];
+
+                        if (value) {
+                                return color(value);
+                        } else {
+                                return "#AAA";
+                        }
+            })
+
+            // displayData(d);
+            console.log(d);
+        })
+             
+
+
+  svg.append("path")
+      .datum(topojson.mesh(uk, uk.objects['uk-postcode-area'], function(a, b) { return a !== b; }))
+      .attr("class", "mesh")
+      .attr("d", path);
+   
+});
+
+
+    
+    var width = 400,
+    height = 400,
+    radius = 70;
+
+    var arc = d3.arc()
+      .outerRadius(radius - 10)
+      .innerRadius(100);
+
+    var pie = d3.pie()
+      .sort(null)
+      .value(function(d) {
+          return d.count;
+      });
+
+function plot_arc(placeholder_id,data,center_text)
+{
+ $(placeholder_id).empty();
+    var svg_d1 = d3.select(placeholder_id).append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var g = svg_d1.selectAll(".arc")
+      .data(pie(data))
+      .enter().append("g");    
+
+    g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d,i) {
+        return d.data.color;
+      });
+
+    g.append("text")
+      .attr("transform", function(d) {
+        var _d = arc.centroid(d);
+        _d[0] *= 1.5; //multiply by a constant factor
+        _d[1] *= 1.5; //multiply by a constant factor
+        return "translate(" + _d + ")";
+      })
+      .attr("dy", ".50em")
+      .style("text-anchor", "middle")
+      .text(function(d) {
+        if(d.data.percentage < 8) {
+          return '';
+        }
+        return d.data.percentage + '%';
+      });
+        
+    g.append("text")
+     .attr("text-anchor", "middle")
+     .attr('font-size', '3em')
+     .attr('y', 20)
+     .text(center_text);
+}
+
+
+function updateTable(d)
+{
+  document.getElementById('postal').innerHTML = d.id;
+
+
+  queue()
+    .defer(d3.json, '/postalData?val='+d.id)
+    .await(function(error,data)
+    {
+      data = data['res'];
+      console.log(data);
+      console.log(data['male']);
+      document.getElementById('male').innerHTML = data['male'];
+      document.getElementById('female').innerHTML = data['female'];
+      document.getElementById('a1').innerHTML = data['a1'];
+      document.getElementById('a2').innerHTML = data['a2'];
+      document.getElementById('a3').innerHTML = data['a3'];
+    
+
+
+    var male = parseInt(data['male']);
+    var female = parseInt(data['female']);
+    var a1 =parseInt(data['a1']);
+    var a2 = parseInt(data['a2']);
+    var a3 = parseInt(data['a3']);
+    var totalAge = a1+a2+a3;
+
+var sex_data = [
+      {name: 'Male', count: male, percentage: (male*100/(male+female)).toFixed(2), color:'#f8b70a'},
+      {name: 'Female', count: female, percentage: (female*100/(male+female)).toFixed(2), color: '#e87120'},
+    ];
+
+    var age_data = [
+      {name: '18 to 30', count: a1, percentage: (a1*100/totalAge).toFixed(2), color:'#e11200'},
+      {name: '31 to 40', count: a2, percentage: (a2*100/totalAge).toFixed(2), color: '#9f8170'},
+      {name: '41 to 50', count: a2, percentage: (a3*100/totalAge).toFixed(2), color: '#37ff00'},
+    ];
+
+console.log(age_data);
+
+    plot_arc('#donut1',age_data,'AGE');
+    plot_arc('#donut2',sex_data,'SEX');
+  });
+}
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+</html>
