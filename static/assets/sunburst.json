@@ -1,0 +1,96 @@
+{
+ "name": "Accidents-UK",
+ "children": [
+  {
+   "name": "Geography",
+   "children": [
+    {
+     "name": "Weather Condition",
+     "children": [
+      {"name": "Cloudy", "size": 23610},
+      {"name": "Sunny", "size": 8973},
+      {"name": "Foggy", "size": 90876},
+      {"name": "Rainy", "size": 47152},
+	  {"name": "Snow", "size": 15424}
+     ]
+    },
+	{
+     "name": "Road Type",
+     "children": [
+      {"name": "Freeway", "size": 15462},
+      {"name": "Major Highway", "size": 42017},
+      {"name": "Minor Highway", "size": 107764},
+      {"name": "Primary Street", "size": 21837}
+     ]
+    },
+	{
+     "name": "Location",
+     "children": [
+      {"name": "Urban", "size": 115928},
+      {"name": "Rural", "size": 70107}
+     ]
+    }
+   ]
+  },
+  
+    {
+   "name": "Driver",
+   "children": [
+    {
+     "name": "Age",
+     "children": [
+      {"name": "0-30", "size": 66066},
+      {"name": "31-50", "size": 68969},
+	  {"name": "50+", "size": 43214}
+     ]
+    },
+	{
+     "name": "Sex",
+     "children": [
+      {"name": "Male", "size": 127707},
+      {"name": "Female", "size": 58328}
+     ]
+    },
+	{
+     "name": "Speed(mph)",
+	      "children": [
+       {"name": "0-30", "size": 117018},
+      {"name": "30-50", "size": 25217},
+	  {"name": "50-70", "size": 43800}
+     ]
+    }
+	]
+  },
+      {
+   "name": "Vehicle Details",
+   "children": [
+    {
+     "name": "Age of Vehicle(years)",
+     "children": [
+      {"name": "0-2", "size": 78426 },
+      {"name": "3-5", "size": 23334},
+      {"name": "6-10", "size":  42575},
+      {"name": "10+", "size":  41700}
+     ]
+    },
+	{
+     "name": "Style",
+     "children": [
+      {"name": "Left-Hand", "size": 21233},
+      {"name": "Right-Hand", "size": 164802}
+     ]
+    },
+	{
+     "name": "Engine Capacity(cc)",
+     "children": [
+      {"name": "0-1000", "size": 74213},
+      {"name": "1000-2000", "size": 92731},
+	  {"name": "2000-3000", "size": 12229},
+	  {"name": "3000+", "size": 6862}
+
+     ]
+    }
+   ]
+  }
+ ]
+}

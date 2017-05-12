@@ -1,0 +1,28 @@
+{"name":"bubble", "children": [
+{"name":"Scatterplots","description":"Analytics like PCA, MDS, Scatter plots etc..",
+"children":[
+    {"name": "PCA","address":"http://localhost:5000/"},
+    {"name": "Euclidean","address":"http://localhost:5000/euclidean_template"},
+    {"name": "Correlation","address":"http://localhost:5000/correlation_template"},
+    {"name": "Scatterplot Matrix","address":"http://localhost:5000/matrix_template"}
+]},
+{"name": "Analyse attributes",
+"children":[
+    {"name":"Intrinsic Dimensionality","address":"http://localhost:5000/intrinsic_template"},
+    {"name":"Scree Plots","address":"http://localhost:5000/scree_template"},
+    {"name":"K Means Elbow","address":"http://localhost:5000/elbow_template"},
+    {"name":"Attribute Cloud","address":"http://localhost:5000/wordCloud"}
+]},
+{"name":"Bar Charts",
+"children":[
+    {"name":"Stacked Bars","address":"http://localhost:5000/stacked_bars"},
+    {"name":"Vertical Bars","address":"http://localhost:5000/verticalBars"}
+]},
+{"name":"Advanced Views",
+"children":[
+    {"name":"Calendar View","address":"http://localhost:5000/calendar"},
+    {"name":"Choropleth","address":"http://localhost:5000/geo_template"},
+    {"name":"Sunburst","address":"http://localhost:5000/sunburst"},
+    {"name":"Parallel coordinates","address":"http://localhost:5000/parallel"}
+]}
+]}

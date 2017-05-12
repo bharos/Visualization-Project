@@ -26,6 +26,14 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route("/land")
+def land():
+    return render_template("land.html")
+
+@app.route("/home")
+def home():
+    return render_template("home.html")
+
 @app.route("/euclidean_template")
 def euclidean_template():
     return render_template("euclidean.html")
@@ -59,6 +67,30 @@ def geo_template():
 def stacked_bars():
     return render_template("stacked_bars.html")
 
+@app.route("/calendar")
+def calendar():
+    return render_template("dayChart.html")
+@app.route("/verticalBars")
+def verticalBars():
+    return render_template("verticalBars.html")
+
+@app.route("/brushDate")
+def brushDate():
+    return render_template("brushDate.html")
+
+@app.route("/parallel")
+def parallel():
+	return render_template("parallel.html")
+
+@app.route("/wordCloud")
+def wordCloud():
+	return render_template("wordCloud.html")
+
+@app.route("/sunburst")
+def sunburst():
+	return render_template("sunburst.html")
+
+	
 def get_geo_vals():
 
     #Check if data is cached
@@ -106,6 +138,7 @@ def get_samples():
                     geo_vals[row[20]]["a1"] = 0
                     geo_vals[row[20]]["a2"] = 0
                     geo_vals[row[20]]["a3"] = 0
+                    geo_vals[row[20]]["day"] = {}
 
 
 
@@ -121,6 +154,12 @@ def get_samples():
                     geo_vals[row[20]]['a2'] += 1
                 if int(row[3]) >= 42 and int(row[3]) <= 50:
                     geo_vals[row[20]]['a3'] += 1
+
+                if row[12] not in geo_vals[row[20]]["day"].keys():
+                        geo_vals[row[20]]["day"][row[12]] = 0
+
+
+                geo_vals[row[20]]["day"][row[12]]  += 1
 
 
                 for i,rowName in enumerate(firstRow[:-1]):
@@ -244,6 +283,30 @@ def get_scree_data():
     print("sending data.....")
     return app.response_class(json.dumps(dict), content_type='application/json')
 
+@app.route("/get_data")
+def get_data():
+
+	row_list = []
+	with open(files.nums_file, 'rt') as f:
+		reader = csv.reader(f)
+		firstRow = next(reader)
+
+
+		print(firstRow)
+
+
+		for row in reader:
+			row_list.append(row[:-1])
+
+
+        # Perform random sampling
+	random_samples = random_sample(row_list, constants.parallel_fraction*len(row_list))
+	dict = {}
+	dict["random"] = random_samples
+	dict["labels"] = firstRow
+	print(random_samples[0])
+	print("sending data.....")
+	return app.response_class(json.dumps(dict), content_type='application/json')
 
 @app.route("/euclidean_data")
 def get_euclidean_data():
@@ -375,13 +438,13 @@ def get_matrix_data():
 def getPostal():
     postal = request.args.get('val')
     dict = {}
-
-
-
     
     all_vals = get_geo_vals()
     # print(all_vals)    
-    dict['res'] = all_vals[postal]
+    if postal == 'all':
+        dict['res'] = all_vals
+    else:
+        dict['res'] = all_vals[postal]
 
     return  app.response_class(json.dumps(dict), content_type='application/json')
 

@@ -2,12 +2,16 @@ import csv
 
 f1=  open('sex_of_drivers.csv','w')
 f2 = open('age_of_drivers.csv','w')
+f3 = open('calendar_data.csv','w')
+
 wr1 = csv.writer(f1, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL,lineterminator='\n')
 
 wr2 = csv.writer(f2, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL,lineterminator='\n')
+wr3 = csv.writer(f3, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL,lineterminator='\n')
+
 wr1.writerow(['State','Male','Female'])
 wr2.writerow(['State','18-30','31-40','41-50'])
-
+wr3.writerow(['State','Day','Value'])
 
 with open('Cleansed_data.csv', 'rt') as f:
             reader = csv.reader(f)
@@ -15,7 +19,6 @@ with open('Cleansed_data.csv', 'rt') as f:
             geo_vals= {}
             row_list = []
             print(firstRow)
-
 
 
             for row in reader:
@@ -28,7 +31,7 @@ with open('Cleansed_data.csv', 'rt') as f:
                     geo_vals[row[20]]["a1"] = 0
                     geo_vals[row[20]]["a2"] = 0
                     geo_vals[row[20]]["a3"] = 0
-
+                    geo_vals[row[20]]["day"] = {}
 
 
                 if row[2] == '1':
@@ -45,8 +48,28 @@ with open('Cleansed_data.csv', 'rt') as f:
                     geo_vals[row[20]]['a3'] += 1
 
 
+                if row[12] not in geo_vals[row[20]]["day"].keys():
+                    geo_vals[row[20]]["day"][row[12]] = 0
 
 
+                geo_vals[row[20]]["day"][row[12]]  += 1
+
+
+
+i = 0
+list = []
 for k in geo_vals.keys():
+
+    if i == 30:
+        break
+    list.append(k)
+    i+=1
     wr1.writerow([k,geo_vals[k]['male'],geo_vals[k]['female']])
     wr2.writerow([k,geo_vals[k]['a1'],geo_vals[k]['a2'],geo_vals[k]['a3']])
+    print(geo_vals[k]['day'].keys())
+    print(geo_vals[k]['day']['2'])
+    for k1 in geo_vals[k]['day'].keys():
+            wr3.writerow([k,k1,geo_vals[k]['day'][k1]])
+
+
+print(list)

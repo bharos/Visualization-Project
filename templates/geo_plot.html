@@ -12,7 +12,29 @@
   stroke-width: .5px;
   stroke-linejoin: round;
 }
+.sq {
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
 
+.c1 {
+  background: #f8b70a;
+}
+.c2 {
+  background : #e87120;
+}
+.c3 {
+  background: #e11200;
+}
+.c4 {
+  background: #9f8170;
+}
+.c5 {
+  background: #37ff00;
+}
 </style>
 <head>
 
@@ -53,46 +75,34 @@
     <div class="sidebar" data-color="purple" data-image="static/assets/img/sidebar-4.jpg">
       <div class="sidebar-wrapper">
             <div class="logo">
-                <a href="#" class="simple-text">
+                <a href="/home" class="simple-text">
                     ACCIDENT DATA ANALYTICS
                 </a>
             </div>
 
             <ul class="nav">
-                <li>
-                    <a href="/intrinsic_template">
+           <li >
+                    <a href="/calendar">
+                        <i class="pe-7s-date"></i>
+                        <p>Calendar View</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="#">
                         <i class="pe-7s-map-marker"></i>
-                        <p>Intrinsic Dimensionality</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/scree_template">
-                        <i class="pe-7s-science"></i>
-                        <p>Scree Plot</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/">
-                        <i class="pe-7s-graph"></i>
-                        <p>PCA Scatterplot</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/elbow_template">
-                        <i class="pe-7s-photo"></i>
-                        <p>K Means Elbow</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/stacked_bars">
-                        <i class="pe-7s-photo"></i>
-                        <p>Stacked Bars</p>
-                    </a>
-                </li>
-                <li  class="active">
-                    <a href="/">
-                        <i class="pe-7s-photo"></i>
                         <p>UK Choropleth</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/sunburst">
+                        <i class="pe-7s-expand1"></i>
+                        <p>Sunburst</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/parallel">
+                        <i class="pe-7s-shuffle"></i>
+                        <p>Parallel Coordinates</p>
                     </a>
                 </li>
             </ul>
@@ -136,27 +146,44 @@
                         </div>
               <div class="col-md-6 col-md-offset-2">
               <div class="row">
-              <span style="margin-left:200px">POSTAL CODE : <span id="postal">---</span>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Accident Details</span>
+
+              
                           <table class="table" id="dataTable">
+                          <thead >
+                          <tr>
+                          
+                          <div style="margin-left:200px" class="row">
+                            <th style="font-size: 18px !important">
+                                  POSTAL CODE : 
+                                    <span id="postal" style="color: green;font-size: 22px !important">
+                                    --
+                                    </span>
+                            </th>
+                            <th style="font-size: 18px !important">
+                                      Accident Details
+                            </th>
+                          </div>
+                          </tr>
+                          </thead>
                           <tbody>
                           <tr>
-                          <td style="text-align: center">Male</td>
+                          <td style="text-align: center"><div class="sq c1"></div>Male</td>
                           <td  id="male">-</td>
                           </tr>
                           <tr>
-                          <td style="text-align: center">Female</td>
+                          <td style="text-align: center"><div class="sq c2"></div>Female</td>
                           <td id="female">-</td>
                           </tr>
                           <tr>
-                          <td style="text-align: center">Age group 18-30</td>
+                          <td style="text-align: center"><div class="sq c3"></div>Age group 18-30</td>
                           <td id="a1">-</td>
                           </tr>
                           <tr>
-                          <td style="text-align: center">Age group 31-40</td>
+                          <td style="text-align: center"><div class="sq c4"></div>Age group 31-40</td>
                           <td id="a2">-</td>
                           </tr>
                           <tr>
-                          <td style="text-align: center">Age group 41-50</td>
+                          <td style="text-align: center"><div class="sq c5"></div>Age group 41-50</td>
                           <td id="a3">-</td>
                           </tr>
                           </tbody>
@@ -230,7 +257,15 @@ d3.json("static/assets/uk-postcode-area.json", function(error, uk) {
       .data(topojson.feature(uk, uk.objects['uk-postcode-area']).features)
     .enter().append("path")
       .attr("class", "postcode_area")
-      .attr("d", path)
+      .attr("d", path);
+
+      p.append("svg:title")
+            .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
+            .attr("dy", ".35em")
+            .text(function (d) { return d.id; });
+
+      p.style("fill", "#f0f0f0")
+      .transition().duration(3000)
       .style("fill", function(d) {
                         //Get data value
                         var value = areadata[d.id];
@@ -240,12 +275,7 @@ d3.json("static/assets/uk-postcode-area.json", function(error, uk) {
                         } else {
                                 return "#AAA";
                         }
-           })                        
-      p.append("svg:title")
-            .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
-            .attr("dy", ".35em")
-            .text(function (d) { return d.id; });
-
+           });                        
         p.on('click',function(d,i)
         {
           console.log(d);
@@ -348,7 +378,6 @@ function plot_arc(placeholder_id,data,center_text)
 function updateTable(d)
 {
   document.getElementById('postal').innerHTML = d.id;
-
 
   queue()
     .defer(d3.json, '/postalData?val='+d.id)

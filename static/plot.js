@@ -162,8 +162,8 @@ var yAxis = d3.svg.axis()
     // .ticks(10);
 
 var svg = d3.select("#scree_plot_"+id).append("svg")
-    .attr("width", width + margin.left + margin.right+50)
-    .attr("height", height + margin.top + margin.bottom+50)
+    .attr("width", width + margin.left + margin.right+150)
+    .attr("height", height + margin.top + margin.bottom+200)
   .append("g")
     .attr("transform", 
           "translate(" + (margin.left +20)+ "," + margin.top + ")");
@@ -182,13 +182,13 @@ var svg = d3.select("#scree_plot_"+id).append("svg")
       .style("text-anchor", "end")
       .attr("dx", "-.8em")
       .attr("dy", "-.55em")
-      .attr("transform", "rotate(-90)" );
+      .attr("transform", "rotate(-60)" );
       
   xa.append("text")
       .style("text-anchor", "end")
       .attr("dx", "-.8em")
       .attr("dy", "-.55em")
-      .attr("transform", "translate(300,100)" )
+      .attr("transform", "translate(400,200)" )
       .text("Attributes");
      
   svg.append("g")
@@ -468,16 +468,16 @@ var color = d3.scale.category10();
 
     if(side == "front") //Random samples
       {
-        index = [3,11,5];
+        index = [2,3,14];
       
       }
       else
       {
-        index = [12,7,10];
+        index = [17,9,11];
       }
         n = index.length;
       
-
+console.log(data);
   index.forEach(function(index) {
     domains[index] = d3.extent(data, function(d) { return d[index]; });
   });
@@ -552,8 +552,7 @@ console.log(n);
         .attr("cx", function(d) { return x(d[p.x]); })
         .attr("cy", function(d) { return y(d[p.y]); })
         .attr("r", 4)
-        .style("fill", function(d) { return color(p.x)
-          ; });
+        .style("fill", "steelblue");
   }
 function cross(a, b) {
   var c = [], n = a.length, m = b.length, i, j;

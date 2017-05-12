@@ -40,46 +40,22 @@
     <div class="sidebar" data-color="purple" data-image="static/assets/img/sidebar-4.jpg">
       <div class="sidebar-wrapper">
             <div class="logo">
-                <a href="#" class="simple-text">
+                <a href="/home" class="simple-text">
                     ACCIDENT DATA ANALYTICS
                 </a>
             </div>
 
             <ul class="nav">
-                <li>
-                    <a href="/intrinsic_template">
-                        <i class="pe-7s-map-marker"></i>
-                        <p>Intrinsic Dimensionality</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/scree_template">
-                        <i class="pe-7s-science"></i>
-                        <p>Scree Plot</p>
-                    </a>
-                </li>
-                <li >
-                    <a href="#">
-                        <i class="pe-7s-graph"></i>
-                        <p>PCA Scatterplot</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/elbow_template">
-                        <i class="pe-7s-photo"></i>
-                        <p>K Means Elbow</p>
-                    </a>
-                </li>
                 <li class="active">
                     <a href="#">
-                        <i class="pe-7s-photo"></i>
+                        <i class="pe-7s-server"></i>
                         <p>Stacked Bars</p>
                     </a>
                 </li>
                 <li>
-                    <a href="/geo_template">
-                        <i class="pe-7s-photo"></i>
-                        <p>UK Choropleth</p>
+                    <a href="/verticalBars">
+                        <i class="pe-7s-graph3"></i>
+                        <p>Vertical Bars</p>
                     </a>
                 </li>
             </ul>
@@ -201,6 +177,10 @@ d3.csv("static/assets/"+file_name, function(d, i, columns) {
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
+    .attr("y", function(d) { return height; })
+    .attr("height", function(d) { return 0; })
+    .attr("x", function(d) { return x(d.data.State); })
+    .transition().duration(2000)
       .attr("x", function(d) { return x(d.data.State); })
       .attr("y", function(d) { return y(d[1]); })
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
@@ -221,7 +201,7 @@ d3.csv("static/assets/"+file_name, function(d, i, columns) {
       .attr("fill", "#000")
       .attr("font-weight", "bold")
       .attr("text-anchor", "start")
-      .text("Population");
+      .text("Accidents");
 
   var legend = g.append("g")
       .attr("font-family", "sans-serif")
